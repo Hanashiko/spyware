@@ -1,88 +1,55 @@
+# Python Spyware
 
-# 🕵️‍♂️ Python Spyware
+## Overview
 
-> **УВАГА:** Цей проєкт призначений виключно для освітніх цілей та демонстрації. Використання цього коду без згоди користувача є порушенням етики та закону. **Не використовуйте в реальних умовах без дозволу.**
+A simple client-server RAT (Remote Access Tool) written in Python. The client connects to the server, executes remote shell commands, and can stream live webcam video.
 
-## 📌 Опис
-
-Це простий демонстраційний spyware-клієнт та сервер, написані на Python. Клієнт підключається до сервера, виконує віддалені команди shell, а також може транслювати відеопотік із вебкамери.
-
----
-
-## 📁 Структура проєкту
+## Structure
 
 ```
 .
-├── client.py   # Клієнтська частина: виконує команди, транслює відео з вебкамери
-├── server.py   # Серверна частина: надсилає команди, отримує відео та виводить його
+├── client.py   # Runs on the target: executes commands, streams webcam
+├── server.py   # Operator side: sends commands, receives and displays video
 ```
 
----
-
-## ⚙️ Вимоги
+## Requirements
 
 - Python 3.6+
-- OpenCV (`cv2`)
-- NumPy
-
-### Встановлення залежностей:
+- opencv-python
+- numpy
 
 ```bash
 pip install opencv-python numpy
 ```
 
----
+## Usage
 
-## 🚀 Запуск
-
-### 1. Запусти сервер
+Start the server first:
 
 ```bash
 python server.py
 ```
 
-Сервер почне слухати підключення на `127.0.0.1:4000`.
-
-### 2. Запусти клієнта
+Then run the client on the target machine:
 
 ```bash
 python client.py
 ```
 
-Клієнт встановить з'єднання з сервером, відправить свою ОС та поточний робочий каталог.
+The client connects to `127.0.0.1:4000` and sends its OS and working directory.
 
----
+## Commands
 
-## 💻 Команди сервера
+| Command | Description |
+|---------|-------------|
+| `start` | Starts webcam stream, saves to `output.mp4` |
+| `exit`  | Terminates the client |
+| anything else | Executes as a shell command, returns output |
 
-- `start` — запускає трансляцію з вебкамери клієнта у реальному часі, записує відео у `output.mp4`.
-- `exit` — завершує роботу клієнта.
-- Будь-яка інша команда (наприклад, `ls`, `whoami`, `dir`) виконується у shell на клієнті, а результат повертається на сервер.
+Press `Ctrl+C` on the server to stop and save the video file.
 
----
+## Notes
 
-## 📷 Робота з відео
-
-- Вебкамера клієнта активується у окремому потоці.
-- Сервер отримує кадри, показує їх у вікні OpenCV та записує у файл `output.mp4`.
-- Вікно трансляції закривається натисканням `q`.
-
----
-
-## 🛑 Завершення
-
-Натисни `Ctrl+C` або введи `exit`, щоб завершити роботу. Сервер зберігає відеофайл перед виходом.
-
----
-
-## 📎 Примітки
-
-- Всі дані передаються в нешифрованому вигляді через TCP. Це **небезпечно** у реальних умовах.
-- Код не підтримує підключення кількох клієнтів одночасно.
-- Відео передається у вигляді JPEG-кадрів.
-
----
-
-## ⚠️ Відмова від відповідальності
-
-Цей код публікується з метою навчання. Автор не несе відповідальності за будь-яке його зловживання.
+- All data is transmitted unencrypted over TCP.
+- Single client only — no multi-connection support.
+- Video is streamed as JPEG frames.
